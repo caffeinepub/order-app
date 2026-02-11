@@ -1,0 +1,16 @@
+{
+  "backend/main.mo": "Empty Motoko actor with no functionality.",
+  "feature_evidence.json": "Stores feature evidence metadata mapping features to affected files, components, tests, and confidence levels.",
+  "frontend-file-summaries.txt": "Lists short descriptions of key frontend files, including App.tsx, styles, parsing utilities, hooks, and sample templates.",
+  "frontend/index.css": "Tailwind base stylesheet defining color tokens, theming variables, and global element styles.",
+  "frontend/index.html": "Base HTML file mounting the React app and loading main.tsx.",
+  "frontend/src/App.tsx": "Main React app handling party entry, line items, WhatsApp message generation, file import of CSV/XLSX, and UI interactions.",
+  "frontend/src/hooks/useActor.ts": "React hook that creates and manages a backend actor based on the user's Internet Identity, refreshing queries when identity changes.",
+  "frontend/src/hooks/useImportedLists.ts": "Manages imported party and item lists with localStorage persistence and helper functions to save and clear data.",
+  "frontend/src/hooks/useInternetIdentity.ts": "Provides authentication context using Internet Identity, handling login, logout, identity persistence, and client creation.",
+  "frontend/src/index.css": "Tailwind CSS file defining a purple-tinted color system, dark mode variables, global styles, and typography settings.",
+  "frontend/src/lib/importLists/parseImportedLists.ts": "Provides client-side CSV/XLSX parsing to extract party and item names, handling headers, sets, and basic validation. Includes CSV line parsing and format error handling.",
+  "frontend/src/main.tsx": "Bootstraps the React app with QueryClient and InternetIdentityProvider and renders the App component.",
+  "frontend/tailwind.config.js": "Configures Tailwind with extended colors, typography, container settings, animations, and custom theme tokens.",
+  "project_state.json": "Describes the project’s state, features, and requirements for an order app including WhatsApp sharing and CSV/XLSX list imports."
+}

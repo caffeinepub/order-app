@@ -1,0 +1,41 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-add-downloadable-sample-template-files-for-the-import-lists-feature-so-users-can-easily-download-a-file-fill-it-in-and-upload-it-back-into-the-app",
+      "featureTitle": "Add downloadable sample/template files for the Import Lists feature so users can easily download a file, fill it in, and upload it back into the app.",
+      "files": [
+        "frontend/src/App.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-10"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-the-import-lists-ui-copy-to-clearly-explain-in-short-form-that-users-can-download-a-sample-template-and-that-the-template-matches-the-supported-csv-xlsx-formats-already-described-in-the-import-lists-card",
+      "featureTitle": "Update the Import Lists UI copy to clearly explain (in short form) that users can download a sample template and that the template matches the supported CSV/XLSX formats already described in the Import Lists card.",
+      "files": [
+        "frontend/src/App.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-11"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

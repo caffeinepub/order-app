@@ -1,0 +1,42 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-11T13:24:40.295Z",
+  "summary": "The diff evidence is insufficient to confirm that the required downloadable CSV/XLSX template assets and corresponding Import Lists UI download controls/copy were implemented. The only clearly evidenced changes are global styling/theme updates, which are outside the stated requirements for this build request.",
+  "missing_requirements": [
+    {
+      "id": "REQ-10",
+      "requirement": "Add downloadable sample/template files (CSV in static/public assets and an XLSX template with sheets named \"Parties\"/\"Items\") and expose them via visible download control(s) in the Import Lists card, with no backend calls.",
+      "reason": "The diff summary reports no added files (Added: 0) and does not show any public/static asset files (e.g., sample CSV/XLSX) being added. The provided App.tsx snippet is truncated before any download controls can be verified.",
+      "evidence": [
+        "file-diff summary: \"Added: 0, Modified: 3, Removed: 0\"",
+        "frontend/src/App.tsx (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "requirement": "Update Import Lists UI copy to briefly mention availability of sample template downloads and keep existing CSV/XLSX instructions accurate.",
+      "reason": "App.tsx is truncated and the shown portion contains no verifiable UI copy about template downloads or updated instructions; no other UI files in the diff provide this copy.",
+      "evidence": [
+        "frontend/src/App.tsx (truncated)"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Global visual theme / palette overhaul (OKLCH color system, purple-tinted palette, typography and shadow token changes).",
+      "reason": "The build request is focused on adding downloadable import templates and small Import Lists copy updates; it does not request broad styling/theme changes.",
+      "evidence": [
+        "frontend/src/index.css",
+        "frontend/tailwind.config.js",
+        "frontend-file-summaries.txt (descriptions for index.css and tailwind.config.js)"
+      ]
+    }
+  ],
+  "confidence": 0.66,
+  "changed_files": [
+    "frontend-file-summaries.txt",
+    "frontend/src/App.tsx",
+    "project_state.json"
+  ]
+}

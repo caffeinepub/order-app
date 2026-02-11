@@ -1,0 +1,68 @@
+{
+  "kind": "build_request",
+  "title": "Add downloadable sample upload file templates for the import feature",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-10",
+      "text": "Add downloadable sample/template files for the Import Lists feature so users can easily download a file, fill it in, and upload it back into the app.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "recent-messages"
+        ],
+        "quotes": [
+          "Can u add a sample file to upload easy for everyone"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The app includes at least one downloadable sample CSV file placed in the frontend static/public assets and accessible via a visible control in the Import Lists card.",
+        "The app includes a downloadable sample Excel template (.xlsx) that matches the current XLSX import expectations (sheets named \"Parties\" and/or \"Items\"; first row treated as header; values listed starting from the second row).",
+        "The sample CSV template matches the current CSV import expectations by including a header row with columns that the parser recognizes (e.g., \"partyName\" and \"itemName\") and at least a few example rows.",
+        "Clicking the download control(s) downloads the template file(s) without requiring any backend calls.",
+        "All user-facing text added for this feature is in English."
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "text": "Update the Import Lists UI copy to clearly explain (in short form) that users can download a sample template and that the template matches the supported CSV/XLSX formats already described in the Import Lists card.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "recent-messages"
+        ],
+        "quotes": [
+          "Can u add a sample file to upload easy for everyone"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The Import Lists card includes a brief line of text and/or helper text that references the availability of the sample template download(s).",
+        "The existing import instructions remain accurate (CSV columns like \"partyName\"/\"itemName\"; Excel sheets \"Parties\" and \"Items\")."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not add any backend upload or backend parsing; templates must be served as static frontend assets.",
+    "Do not edit files under frontend/src/components/ui or any other paths listed as immutable in SYSTEM_CONTEXT.",
+    "Keep the existing CSV/XLSX parsing behavior in frontend/src/lib/importLists/parseImportedLists.ts compatible with the provided templates."
+  ],
+  "nonGoals": [
+    "Adding new spreadsheet formats beyond the currently supported CSV/XLSX.",
+    "Changing how imported lists are persisted (localStorage behavior stays as-is).",
+    "Adding authentication or any backend state for imported lists."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "frontend/src/App.tsx": "Main Order App component with party name input, dynamic line items, live message preview, WhatsApp sharing, import functionality for uploading CSV/XLSX files, and downloadable sample template links (CSV and Excel) in the Import Lists card.",
+  "frontend/src/index.css": "Global styles with OKLCH color system featuring a professional purple-tinted palette for both light and dark modes, optimized for invoice-like presentation.",
+  "frontend/tailwind.config.js": "Tailwind configuration with custom color tokens, border radius, shadows, Inter font family, and JetBrains Mono for monospace text.",
+  "frontend/src/hooks/useImportedLists.ts": "Custom hook that manages imported party and item lists with localStorage persistence, providing methods to save, clear, and retrieve imported data across page refreshes.",
+  "frontend/src/lib/importLists/parseImportedLists.ts": "Client-side parsing utilities for CSV and XLSX files that extract party and item names, supporting CSV files with headers and XLSX files with separate \"Parties\" and \"Items\" sheets, using dynamic CDN loading for the XLSX library.",
+  "frontend/public/assets/templates/import-lists-sample.csv": "Sample CSV template file with example party names and item names using the expected column headers (partyName, itemName) for easy import testing.",
+  "frontend/public/assets/templates/import-lists-template.xlsx": "Sample Excel template file with two sheets (\"Parties\" and \"Items\") containing example data that matches the XLSX import expectations."
+}
