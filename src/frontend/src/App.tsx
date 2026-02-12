@@ -6,10 +6,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Plus, Trash2, Send, AlertCircle, Upload, X, FileSpreadsheet, Download } from 'lucide-react';
+import { Plus, Trash2, AlertCircle, Download, Eye, FileSpreadsheet } from 'lucide-react';
 import { SiWhatsapp } from 'react-icons/si';
 import { useImportedLists } from '@/hooks/useImportedLists';
 import { parseImportedLists } from '@/lib/importLists/parseImportedLists';
+import { useAppSettings } from '@/hooks/useAppSettings';
+import SettingsCard from '@/components/SettingsCard';
+import PublishSellGuidance from '@/components/PublishSellGuidance';
+import WhatsAppSendPreviewModal from '@/components/WhatsAppSendPreviewModal';
+import HelplineAction from '@/components/HelplineAction';
 
 interface LineItem {
   id: string;
@@ -17,6 +22,8 @@ interface LineItem {
   size: string;
   itemName: string;
 }
+
+const PRESET_SIZES = ['200 L', '100 L', '20 L', '10 L', '4 L', '1 L'];
 
 function App() {
   const [partyName, setPartyName] = useState('');
@@ -29,9 +36,11 @@ function App() {
   const [importError, setImportError] = useState('');
   const [isImporting, setIsImporting] = useState(false);
   const [importSuccess, setImportSuccess] = useState('');
+  const [customSizeInputs, setCustomSizeInputs] = useState<Record<string, boolean>>({});
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
 
-  const { parties, items, hasImportedLists, saveImportedLists, clearImportedLists, isLoaded } =
-    useImportedLists();
+  const { parties, items, hasImportedLists, saveImportedLists, clearImportedLists } = useImportedLists();
+  const { appName } = useAppSettings();
 
   const addLineItem = () => {
     const newItem: LineItem = {
@@ -46,6 +55,9 @@ function App() {
   const removeLineItem = (id: string) => {
     if (lineItems.length > 1) {
       setLineItems(lineItems.filter((item) => item.id !== id));
+      const newCustomSizeInputs = { ...customSizeInputs };
+      delete newCustomSizeInputs[id];
+      setCustomSizeInputs(newCustomSizeInputs);
     }
   };
 
@@ -57,6 +69,16 @@ function App() {
     );
   };
 
+  const handleSizeChange = (id: string, value: string) => {
+    if (value === 'other') {
+      setCustomSizeInputs({ ...customSizeInputs, [id]: true });
+      updateLineItem(id, 'size', '');
+    } else {
+      setCustomSizeInputs({ ...customSizeInputs, [id]: false });
+      updateLineItem(id, 'size', value);
+    }
+  };
+
   const generateMessage = (): string => {
     const completeItems = lineItems.filter(
       (item) => item.quantity && item.size && item.itemName.trim()
@@ -64,7 +86,8 @@ function App() {
 
     if (!partyName.trim()) return '';
 
-    let message = `Party Name: ${partyName.trim()}\n`;
+    let message = `Party Name: ${partyName.trim()}\n\n`;
+    
     completeItems.forEach((item) => {
       message += `${item.quantity} x ${item.size} ${item.itemName.trim()}\n`;
     });
@@ -72,12 +95,12 @@ function App() {
     return message.trim();
   };
 
-  const handleSendWhatsApp = () => {
+  const validateOrder = (): boolean => {
     setValidationError('');
 
     if (!partyName.trim()) {
-      setValidationError('Please enter a Party Name before sending.');
-      return;
+      setValidationError('Please enter a Party Name before proceeding.');
+      return false;
     }
 
     const completeItems = lineItems.filter(
@@ -86,13 +109,28 @@ function App() {
 
     if (completeItems.length === 0) {
       setValidationError('Please add at least one complete line item (quantity, size, and item name).');
-      return;
+      return false;
     }
 
+    return true;
+  };
+
+  const handleOpenPreview = () => {
+    if (validateOrder()) {
+      setShowPreviewModal(true);
+    }
+  };
+
+  const handleConfirmSend = () => {
     const message = generateMessage();
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
+    setShowPreviewModal(false);
+  };
+
+  const handleClosePreview = () => {
+    setShowPreviewModal(false);
   };
 
   const handleFileImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -123,7 +161,6 @@ function App() {
       );
     } finally {
       setIsImporting(false);
-      // Reset file input
       event.target.value = '';
     }
   };
@@ -134,344 +171,315 @@ function App() {
     setImportError('');
   };
 
-  const message = generateMessage();
-  const currentYear = new Date().getFullYear();
-  const appIdentifier = encodeURIComponent(window.location.hostname || 'order-app');
+  const handleDownloadTemplate = (format: 'csv' | 'xlsx') => {
+    const templatePath = format === 'csv' 
+      ? '/assets/templates/import-lists-sample.csv'
+      : '/assets/templates/import-lists-template.xlsx';
+    
+    const link = document.createElement('a');
+    link.href = templatePath;
+    link.download = `import-lists-template.${format}`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      <div className="container mx-auto px-4 py-8 max-w-5xl">
-        {/* Header */}
-        <header className="mb-8 text-center">
-          <h1 className="text-4xl font-bold tracking-tight mb-2 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-            Order App
-          </h1>
-          <p className="text-muted-foreground">Create and share your orders instantly</p>
-        </header>
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+      <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <SiWhatsapp className="h-8 w-8 text-green-600" />
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+              {appName}
+            </h1>
+          </div>
+          <HelplineAction />
+        </div>
+      </header>
 
-        <main className="grid lg:grid-cols-2 gap-6">
+      <main className="container mx-auto px-4 py-8 space-y-8">
+        <div className="max-w-4xl mx-auto space-y-8">
           {/* Order Form */}
-          <div className="space-y-6">
-            {/* Import Lists Card */}
-            <Card className="shadow-lg border-2">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileSpreadsheet className="h-5 w-5" />
-                  Import Lists
-                </CardTitle>
-                <CardDescription>
-                  Upload a CSV or Excel file with party names and item names. For CSV, use columns named "partyName" or "itemName". For Excel, use sheets named "Parties" and "Items".
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {/* Download Templates Section */}
-                <div className="p-3 bg-muted/50 rounded-lg border space-y-2">
-                  <p className="text-sm font-medium text-muted-foreground">Download sample templates:</p>
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="sm"
-                      className="gap-2"
-                    >
-                      <a
-                        href="/assets/templates/import-lists-sample.csv"
-                        download="import-lists-sample.csv"
-                      >
-                        <Download className="h-4 w-4" />
-                        CSV Template
-                      </a>
-                    </Button>
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="sm"
-                      className="gap-2"
-                    >
-                      <a
-                        href="/assets/templates/import-lists-template.xlsx"
-                        download="import-lists-template.xlsx"
-                      >
-                        <Download className="h-4 w-4" />
-                        Excel Template
-                      </a>
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="flex gap-2">
-                  <div className="flex-1">
-                    <Label htmlFor="file-import" className="sr-only">
-                      Import file
-                    </Label>
-                    <div className="relative">
-                      <Input
-                        id="file-import"
-                        type="file"
-                        accept=".csv,.xlsx,.xls"
-                        onChange={handleFileImport}
-                        disabled={isImporting}
-                        className="cursor-pointer"
-                      />
-                    </div>
-                  </div>
-                  {hasImportedLists && (
-                    <Button
-                      onClick={handleClearImportedLists}
-                      variant="outline"
-                      size="icon"
-                      title="Clear imported lists"
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  )}
-                </div>
-
-                {isImporting && (
-                  <Alert>
-                    <Upload className="h-4 w-4 animate-pulse" />
-                    <AlertDescription>Importing file...</AlertDescription>
-                  </Alert>
-                )}
-
-                {importError && (
-                  <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>{importError}</AlertDescription>
-                  </Alert>
-                )}
-
-                {importSuccess && (
-                  <Alert className="border-green-500 bg-green-50 dark:bg-green-950/20">
-                    <AlertCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
-                    <AlertDescription className="text-green-800 dark:text-green-300">
-                      {importSuccess}
-                    </AlertDescription>
-                  </Alert>
-                )}
-
-                {hasImportedLists && (
-                  <div className="text-sm text-muted-foreground space-y-1">
-                    {parties.length > 0 && (
-                      <p>✓ {parties.length} {parties.length === 1 ? 'party' : 'parties'} available</p>
-                    )}
-                    {items.length > 0 && (
-                      <p>✓ {items.length} {items.length === 1 ? 'item' : 'items'} available</p>
-                    )}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Order Details Card */}
-            <Card className="shadow-lg border-2">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <span className="text-2xl">📋</span>
-                  Order Details
-                </CardTitle>
-                <CardDescription>Fill in the party name and line items</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Party Name */}
-                <div className="space-y-2">
-                  <Label htmlFor="partyName" className="text-base font-semibold">
-                    Party Name <span className="text-destructive">*</span>
-                  </Label>
+          <Card className="shadow-lg">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <SiWhatsapp className="h-5 w-5 text-green-600" />
+                Create Order
+              </CardTitle>
+              <CardDescription>Fill in the order details and send via WhatsApp</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Party Name */}
+              <div className="space-y-2">
+                <Label htmlFor="partyName">Party Name *</Label>
+                {hasImportedLists && parties.length > 0 ? (
+                  <Select value={partyName} onValueChange={setPartyName}>
+                    <SelectTrigger id="partyName">
+                      <SelectValue placeholder="Select a party" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {parties.map((party) => (
+                        <SelectItem key={party} value={party}>
+                          {party}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
                   <Input
                     id="partyName"
                     placeholder="Enter party name"
                     value={partyName}
                     onChange={(e) => setPartyName(e.target.value)}
-                    className="text-base"
-                    list={parties.length > 0 ? 'parties-list' : undefined}
                   />
-                  {parties.length > 0 && (
-                    <datalist id="parties-list">
-                      {parties.map((party) => (
-                        <option key={party} value={party} />
-                      ))}
-                    </datalist>
-                  )}
+                )}
+              </div>
+
+              {/* Line Items */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label>Line Items</Label>
+                  <Button onClick={addLineItem} size="sm" variant="outline" className="gap-2">
+                    <Plus className="h-4 w-4" />
+                    Add Item
+                  </Button>
                 </div>
 
-                {/* Line Items */}
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <Label className="text-base font-semibold">Line Items</Label>
-                    <Button
-                      onClick={addLineItem}
-                      size="sm"
-                      variant="outline"
-                      className="gap-2"
-                    >
-                      <Plus className="h-4 w-4" />
-                      Add Item
-                    </Button>
-                  </div>
+                <div className="space-y-3">
+                  {lineItems.map((item) => {
+                    const isCustomSize = customSizeInputs[item.id] || (!PRESET_SIZES.includes(item.size) && item.size !== '');
+                    const selectValue = isCustomSize ? 'other' : (item.size || '1 L');
 
-                  <div className="space-y-3">
-                    {lineItems.map((item, index) => (
-                      <Card key={item.id} className="p-4 bg-muted/30">
-                        <div className="space-y-3">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm font-medium text-muted-foreground">
-                              Item #{index + 1}
-                            </span>
-                            {lineItems.length > 1 && (
-                              <Button
-                                onClick={() => removeLineItem(item.id)}
-                                size="sm"
-                                variant="ghost"
-                                className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
+                    return (
+                      <div key={item.id} className="flex gap-2 items-start">
+                        <div className="flex-1 grid grid-cols-3 gap-2">
+                          <Input
+                            type="number"
+                            placeholder="Qty"
+                            value={item.quantity}
+                            onChange={(e) => updateLineItem(item.id, 'quantity', e.target.value)}
+                            min="0"
+                          />
+                          <div className="space-y-2">
+                            <Select
+                              value={selectValue}
+                              onValueChange={(value) => handleSizeChange(item.id, value)}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Size" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {PRESET_SIZES.map((size) => (
+                                  <SelectItem key={size} value={size}>
+                                    {size}
+                                  </SelectItem>
+                                ))}
+                                <SelectItem value="other">Other</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            {isCustomSize && (
+                              <Input
+                                placeholder="Enter custom size"
+                                value={item.size}
+                                onChange={(e) => updateLineItem(item.id, 'size', e.target.value)}
+                              />
                             )}
                           </div>
-
-                          <div className="grid grid-cols-[1fr_1.5fr_2fr] gap-2">
-                            <div className="space-y-1">
-                              <Label htmlFor={`qty-${item.id}`} className="text-xs">
-                                Qty
-                              </Label>
-                              <Input
-                                id={`qty-${item.id}`}
-                                type="number"
-                                min="0"
-                                placeholder="0"
-                                value={item.quantity}
-                                onChange={(e) =>
-                                  updateLineItem(item.id, 'quantity', e.target.value)
-                                }
-                                className="text-sm"
-                              />
-                            </div>
-
-                            <div className="space-y-1">
-                              <Label htmlFor={`size-${item.id}`} className="text-xs">
-                                Size
-                              </Label>
-                              <Select
-                                value={item.size}
-                                onValueChange={(value) =>
-                                  updateLineItem(item.id, 'size', value)
-                                }
-                              >
-                                <SelectTrigger id={`size-${item.id}`} className="text-sm">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="20 L">20 L</SelectItem>
-                                  <SelectItem value="10 L">10 L</SelectItem>
-                                  <SelectItem value="5 L">5 L</SelectItem>
-                                  <SelectItem value="4 L">4 L</SelectItem>
-                                  <SelectItem value="2 L">2 L</SelectItem>
-                                  <SelectItem value="1 L">1 L</SelectItem>
-                                  <SelectItem value="500 mL">500 mL</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-
-                            <div className="space-y-1">
-                              <Label htmlFor={`name-${item.id}`} className="text-xs">
-                                Item Name
-                              </Label>
-                              <Input
-                                id={`name-${item.id}`}
-                                placeholder="Item name"
-                                value={item.itemName}
-                                onChange={(e) =>
-                                  updateLineItem(item.id, 'itemName', e.target.value)
-                                }
-                                className="text-sm"
-                                list={items.length > 0 ? 'items-list' : undefined}
-                              />
-                            </div>
-                          </div>
+                          {hasImportedLists && items.length > 0 ? (
+                            <Select
+                              value={item.itemName}
+                              onValueChange={(value) => updateLineItem(item.id, 'itemName', value)}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select item" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {items.map((itemName) => (
+                                  <SelectItem key={itemName} value={itemName}>
+                                    {itemName}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          ) : (
+                            <Input
+                              placeholder="Item name"
+                              value={item.itemName}
+                              onChange={(e) => updateLineItem(item.id, 'itemName', e.target.value)}
+                            />
+                          )}
                         </div>
-                      </Card>
-                    ))}
-                  </div>
+                        <Button
+                          onClick={() => removeLineItem(item.id)}
+                          size="icon"
+                          variant="ghost"
+                          disabled={lineItems.length === 1}
+                          className="shrink-0"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    );
+                  })}
                 </div>
+              </div>
 
-                {/* Shared datalist for all item name inputs */}
-                {items.length > 0 && (
-                  <datalist id="items-list">
-                    {items.map((itemName) => (
-                      <option key={itemName} value={itemName} />
-                    ))}
-                  </datalist>
-                )}
+              {/* Validation Error */}
+              {validationError && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>{validationError}</AlertDescription>
+                </Alert>
+              )}
 
-                {/* Validation Error */}
-                {validationError && (
-                  <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>{validationError}</AlertDescription>
-                  </Alert>
-                )}
+              {/* Preview Message */}
+              {partyName.trim() && (
+                <div className="space-y-2">
+                  <Label>Preview</Label>
+                  <Textarea
+                    value={generateMessage()}
+                    readOnly
+                    className="min-h-[150px] font-mono text-sm bg-muted"
+                  />
+                </div>
+              )}
 
-                {/* Send Button */}
+              {/* Action Buttons */}
+              <div className="flex gap-3">
                 <Button
-                  onClick={handleSendWhatsApp}
-                  className="w-full gap-2 text-base h-12"
-                  size="lg"
+                  onClick={handleOpenPreview}
+                  className="flex-1 gap-2"
+                  variant="default"
                 >
-                  <SiWhatsapp className="h-5 w-5" />
-                  Send on WhatsApp
+                  <Eye className="h-4 w-4" />
+                  Message Preview
                 </Button>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Message Preview */}
-          <Card className="shadow-lg border-2 lg:sticky lg:top-8 h-fit">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Send className="h-5 w-5" />
-                Message Preview
-              </CardTitle>
-              <CardDescription>This is how your order will appear</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="relative">
-                <Textarea
-                  value={message || 'Your order preview will appear here...'}
-                  readOnly
-                  className="min-h-[300px] font-mono text-sm bg-muted/50 resize-none"
-                  placeholder="Your order preview will appear here..."
-                />
-                {message && (
-                  <div className="mt-4 p-3 bg-primary/5 border border-primary/20 rounded-md">
-                    <p className="text-xs text-muted-foreground">
-                      ✓ Ready to send • {lineItems.filter(
-                        (item) => item.quantity && item.size && item.itemName.trim()
-                      ).length}{' '}
-                      item(s)
-                    </p>
-                  </div>
-                )}
               </div>
             </CardContent>
           </Card>
-        </main>
 
-        {/* Footer */}
-        <footer className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
+          {/* Import Lists */}
+          <Card className="shadow-lg">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FileSpreadsheet className="h-5 w-5" />
+                Import Party & Item Lists
+              </CardTitle>
+              <CardDescription>
+                Upload a CSV or Excel file to import party names and item names for quick selection
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Download Templates */}
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => handleDownloadTemplate('csv')}
+                  variant="outline"
+                  size="sm"
+                  className="gap-2"
+                >
+                  <Download className="h-4 w-4" />
+                  Download CSV Template
+                </Button>
+                <Button
+                  onClick={() => handleDownloadTemplate('xlsx')}
+                  variant="outline"
+                  size="sm"
+                  className="gap-2"
+                >
+                  <Download className="h-4 w-4" />
+                  Download Excel Template
+                </Button>
+              </div>
+
+              {/* Import Status */}
+              {importSuccess && (
+                <Alert>
+                  <AlertDescription className="text-green-600 dark:text-green-400">
+                    {importSuccess}
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              {importError && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>{importError}</AlertDescription>
+                </Alert>
+              )}
+
+              {/* Import Actions */}
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => document.getElementById('file-import')?.click()}
+                  disabled={isImporting}
+                  variant="default"
+                  className="gap-2"
+                >
+                  {isImporting ? 'Importing...' : 'Import File'}
+                </Button>
+                {hasImportedLists && (
+                  <Button
+                    onClick={handleClearImportedLists}
+                    variant="outline"
+                    className="gap-2"
+                  >
+                    Clear Imported Lists
+                  </Button>
+                )}
+              </div>
+
+              <input
+                id="file-import"
+                type="file"
+                accept=".csv,.xlsx"
+                onChange={handleFileImport}
+                className="hidden"
+              />
+
+              {hasImportedLists && (
+                <div className="text-sm text-muted-foreground">
+                  Currently loaded: {parties.length} {parties.length === 1 ? 'party' : 'parties'}, {items.length} {items.length === 1 ? 'item' : 'items'}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Settings */}
+          <SettingsCard />
+
+          {/* Publish & Sell Guidance */}
+          <PublishSellGuidance />
+        </div>
+      </main>
+
+      <footer className="border-t mt-auto py-6">
+        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
           <p>
-            © {currentYear} • Built with ❤️ using{' '}
+            © {new Date().getFullYear()} Built with ❤️ using{' '}
             <a
-              href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${appIdentifier}`}
+              href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(
+                typeof window !== 'undefined' ? window.location.hostname : 'unknown-app'
+              )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium hover:text-foreground transition-colors underline"
+              className="text-primary hover:underline"
             >
               caffeine.ai
             </a>
           </p>
-        </footer>
-      </div>
+        </div>
+      </footer>
+
+      <WhatsAppSendPreviewModal
+        open={showPreviewModal}
+        onClose={handleClosePreview}
+        message={generateMessage()}
+        onConfirmSend={handleConfirmSend}
+        isBlocked={false}
+        blockReason={undefined}
+      />
     </div>
   );
 }

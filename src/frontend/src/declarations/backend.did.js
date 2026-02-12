@@ -8,10 +8,98 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
-export const idlService = IDL.Service({});
+export const UserRole = IDL.Variant({
+  'admin' : IDL.Null,
+  'user' : IDL.Null,
+  'guest' : IDL.Null,
+});
+export const Time = IDL.Int;
+export const EntitlementState = IDL.Record({
+  'trialStart' : Time,
+  'isSubscribed' : IDL.Bool,
+});
+export const UserProfile = IDL.Record({ 'name' : IDL.Text });
+
+export const idlService = IDL.Service({
+  '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'cancelSubscription' : IDL.Func([], [], []),
+  'createTrial' : IDL.Func([], [], []),
+  'getAllEntitlements' : IDL.Func(
+      [],
+      [IDL.Vec(IDL.Tuple(IDL.Principal, EntitlementState))],
+      ['query'],
+    ),
+  'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+  'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getEntitlementState' : IDL.Func([], [IDL.Opt(EntitlementState)], ['query']),
+  'getUserEntitlement' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Opt(EntitlementState)],
+      ['query'],
+    ),
+  'getUserProfile' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Opt(UserProfile)],
+      ['query'],
+    ),
+  'hasActiveEntitlement' : IDL.Func([], [IDL.Bool], ['query']),
+  'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'isTrialActive' : IDL.Func([], [IDL.Bool], ['query']),
+  'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+  'setUserSubscription' : IDL.Func([IDL.Principal, IDL.Bool], [], []),
+  'startSubscription' : IDL.Func([], [], []),
+});
 
 export const idlInitArgs = [];
 
-export const idlFactory = ({ IDL }) => { return IDL.Service({}); };
+export const idlFactory = ({ IDL }) => {
+  const UserRole = IDL.Variant({
+    'admin' : IDL.Null,
+    'user' : IDL.Null,
+    'guest' : IDL.Null,
+  });
+  const Time = IDL.Int;
+  const EntitlementState = IDL.Record({
+    'trialStart' : Time,
+    'isSubscribed' : IDL.Bool,
+  });
+  const UserProfile = IDL.Record({ 'name' : IDL.Text });
+  
+  return IDL.Service({
+    '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'cancelSubscription' : IDL.Func([], [], []),
+    'createTrial' : IDL.Func([], [], []),
+    'getAllEntitlements' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Tuple(IDL.Principal, EntitlementState))],
+        ['query'],
+      ),
+    'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+    'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getEntitlementState' : IDL.Func(
+        [],
+        [IDL.Opt(EntitlementState)],
+        ['query'],
+      ),
+    'getUserEntitlement' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(EntitlementState)],
+        ['query'],
+      ),
+    'getUserProfile' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(UserProfile)],
+        ['query'],
+      ),
+    'hasActiveEntitlement' : IDL.Func([], [IDL.Bool], ['query']),
+    'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'isTrialActive' : IDL.Func([], [IDL.Bool], ['query']),
+    'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+    'setUserSubscription' : IDL.Func([IDL.Principal, IDL.Bool], [], []),
+    'startSubscription' : IDL.Func([], [], []),
+  });
+};
 
 export const init = ({ IDL }) => { return []; };

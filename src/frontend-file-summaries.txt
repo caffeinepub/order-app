@@ -1,9 +1,23 @@
 {
-  "frontend/src/App.tsx": "Main Order App component with party name input, dynamic line items, live message preview, WhatsApp sharing, import functionality for uploading CSV/XLSX files, and downloadable sample template links (CSV and Excel) in the Import Lists card.",
+  "frontend/src/App.tsx": "Main application component with guest-mode order form, party name and line items, WhatsApp sharing with message preview modal, import functionality, settings, and helpline action in header (all authentication gates and login UI removed).",
   "frontend/src/index.css": "Global styles with OKLCH color system featuring a professional purple-tinted palette for both light and dark modes, optimized for invoice-like presentation.",
   "frontend/tailwind.config.js": "Tailwind configuration with custom color tokens, border radius, shadows, Inter font family, and JetBrains Mono for monospace text.",
   "frontend/src/hooks/useImportedLists.ts": "Custom hook that manages imported party and item lists with localStorage persistence, providing methods to save, clear, and retrieve imported data across page refreshes.",
   "frontend/src/lib/importLists/parseImportedLists.ts": "Client-side parsing utilities for CSV and XLSX files that extract party and item names, supporting CSV files with headers and XLSX files with separate \"Parties\" and \"Items\" sheets, using dynamic CDN loading for the XLSX library.",
   "frontend/public/assets/templates/import-lists-sample.csv": "Sample CSV template file with example party names and item names using the expected column headers (partyName, itemName) for easy import testing.",
-  "frontend/public/assets/templates/import-lists-template.xlsx": "Sample Excel template file with two sheets (\"Parties\" and \"Items\") containing example data that matches the XLSX import expectations."
+  "frontend/public/assets/templates/import-lists-template.xlsx": "Sample Excel template file with two sheets (\"Parties\" and \"Items\") containing example data that matches the XLSX import expectations.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for user profiles and entitlement management with optional enable/disable mechanism to prevent authenticated-only queries from running in guest mode.",
+  "frontend/src/hooks/useEntitlement.ts": "Custom hook that wraps entitlement queries with authentication check to prevent queries from running in guest mode and provides computed state and actions with loading states.",
+  "frontend/src/lib/entitlement.ts": "Utility functions for entitlement calculations including trial duration, date conversions, expiration checks, and user-facing message generation with consistent two-step subscription flow guidance.",
+  "frontend/src/hooks/useAppSettings.ts": "Custom hook for managing app settings (app name and helpline phone) with localStorage persistence and automatic document title updates (subscription URL removed).",
+  "frontend/src/components/LoginButton.tsx": "Authentication button component that handles Internet Identity login/logout with proper query cache clearing on logout.",
+  "frontend/src/components/ProfileSetup.tsx": "Modal dialog for first-time user profile setup that prompts authenticated users to enter their name.",
+  "frontend/src/components/EntitlementStatus.tsx": "Compact status display showing current entitlement state (trial active/expired, subscribed, or no access) with appropriate badges, icons, and updated messaging.",
+  "frontend/src/components/EntitlementCallout.tsx": "Alert component shown near gated features explaining access restrictions and providing CTAs to start trial, subscribe externally, or activate Pro subscription in-app with error handling.",
+  "frontend/src/components/UpgradeSubscriptionCard.tsx": "Subscription management card displaying Free Trial and Pro plan comparison with actions to start trial, subscribe externally, activate Pro subscription in-app with error handling, or cancel subscription.",
+  "frontend/src/components/SettingsCard.tsx": "Settings interface for customizing helpline phone number with local state management and save functionality (header, app name label, app name input, and helpline label removed).",
+  "frontend/src/components/PublishSellGuidance.tsx": "Accordion-based guidance section explaining web link sharing, Play Store/App Store distribution steps, and important limitations.",
+  "frontend/index.html": "HTML entry point with default title that gets updated at runtime by the app settings hook.",
+  "frontend/src/components/WhatsAppSendPreviewModal.tsx": "Modal dialog component that displays a read-only preview of the generated WhatsApp order message with Cancel and Confirm actions, including blocked state handling (unchanged, supports guest mode when isBlocked is false).",
+  "frontend/src/components/HelplineAction.tsx": "Compact header component that displays a tappable click-to-call helpline button when a helpline phone number is configured in settings, hidden when no number is set."
 }

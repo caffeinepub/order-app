@@ -1,55 +1,36 @@
 {
   "kind": "build_request",
-  "title": "Add downloadable sample upload file templates for the import feature",
+  "title": "Remove selected Settings UI elements",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-10",
-      "text": "Add downloadable sample/template files for the Import Lists feature so users can easily download a file, fill it in, and upload it back into the app.",
+      "id": "REQ-1",
+      "text": "Remove the selected Settings UI elements identified by the provided XPaths (apply changes ONLY to these elements):\n1) Remove the element at /html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[1]/div[1] (Settings card header/title area).\n2) Remove the element at /html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[2]/div[1]/input[1] (the first Settings input).\n3) Remove the element at /html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[2]/div[1]/label[1] (the first Settings label).\n4) Remove the element at /html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[2]/div[2]/label[1] (the second Settings label).\n\nUser-facing text should remain in English.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "recent-messages"
+          "msg-1"
         ],
         "quotes": [
-          "Can u add a sample file to upload easy for everyone"
+          "Remove\nThe user has selected the following 4 elements from the page for context.\nFor each element, there is an XPath expression leading to the selected element. Use the XPath expressions to identify the elements to edit.\nThe user instructions should be applied ONLY to the elements selected in this prompt."
         ]
       },
       "acceptanceCriteria": [
-        "The app includes at least one downloadable sample CSV file placed in the frontend static/public assets and accessible via a visible control in the Import Lists card.",
-        "The app includes a downloadable sample Excel template (.xlsx) that matches the current XLSX import expectations (sheets named \"Parties\" and/or \"Items\"; first row treated as header; values listed starting from the second row).",
-        "The sample CSV template matches the current CSV import expectations by including a header row with columns that the parser recognizes (e.g., \"partyName\" and \"itemName\") and at least a few example rows.",
-        "Clicking the download control(s) downloads the template file(s) without requiring any backend calls.",
-        "All user-facing text added for this feature is in English."
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "text": "Update the Import Lists UI copy to clearly explain (in short form) that users can download a sample template and that the template matches the supported CSV/XLSX formats already described in the Import Lists card.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "recent-messages"
-        ],
-        "quotes": [
-          "Can u add a sample file to upload easy for everyone"
-        ]
-      },
-      "acceptanceCriteria": [
-        "The Import Lists card includes a brief line of text and/or helper text that references the availability of the sample template download(s).",
-        "The existing import instructions remain accurate (CSV columns like \"partyName\"/\"itemName\"; Excel sheets \"Parties\" and \"Items\")."
+        "The element at XPath /html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[1]/div[1] is no longer rendered.",
+        "The element at XPath /html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[2]/div[1]/input[1] is no longer rendered.",
+        "The element at XPath /html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[2]/div[1]/label[1] is no longer rendered.",
+        "The element at XPath /html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[2]/div[2]/label[1] is no longer rendered.",
+        "No other UI elements outside the four selected XPaths are changed."
       ]
     }
   ],
   "constraints": [
-    "Do not add any backend upload or backend parsing; templates must be served as static frontend assets.",
-    "Do not edit files under frontend/src/components/ui or any other paths listed as immutable in SYSTEM_CONTEXT.",
-    "Keep the existing CSV/XLSX parsing behavior in frontend/src/lib/importLists/parseImportedLists.ts compatible with the provided templates."
+    "Apply the removal instructions ONLY to the four selected elements referenced by the provided XPaths.",
+    "Do not change the app name (including its word order) outside of what is strictly necessary to remove the selected elements."
   ],
   "nonGoals": [
-    "Adding new spreadsheet formats beyond the currently supported CSV/XLSX.",
-    "Changing how imported lists are persisted (localStorage behavior stays as-is).",
-    "Adding authentication or any backend state for imported lists."
+    "Redesigning the Settings card beyond removing the selected elements.",
+    "Changing backend behavior or persistence related to app name or helpline settings."
   ],
   "imageRequirements": {
     "required": [],

@@ -1,42 +1,38 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-11T13:24:40.295Z",
-  "summary": "The diff evidence is insufficient to confirm that the required downloadable CSV/XLSX template assets and corresponding Import Lists UI download controls/copy were implemented. The only clearly evidenced changes are global styling/theme updates, which are outside the stated requirements for this build request.",
+  "generatedAt": "2026-02-12T04:39:56.360Z",
+  "summary": "SettingsCard UI was modified to remove header/title and labels, but an <Input> is still rendered in the first settings field area, which may correspond to the XPath that was required to be removed. Additionally, new UI elements (helper text and a conditional \"Save Changes\" button) appear to have been added beyond the four specified removals.",
   "missing_requirements": [
     {
-      "id": "REQ-10",
-      "requirement": "Add downloadable sample/template files (CSV in static/public assets and an XLSX template with sheets named \"Parties\"/\"Items\") and expose them via visible download control(s) in the Import Lists card, with no backend calls.",
-      "reason": "The diff summary reports no added files (Added: 0) and does not show any public/static asset files (e.g., sample CSV/XLSX) being added. The provided App.tsx snippet is truncated before any download controls can be verified.",
+      "id": "REQ-1",
+      "requirement": "Remove the element at XPath /html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[2]/div[1]/input[1] (the first Settings input) so it is no longer rendered.",
+      "reason": "The updated SettingsCard.tsx still renders an <Input> inside the first settings field block (<div className=\"space-y-2\"> ... <Input ... />), which likely maps to the referenced first input XPath position.",
       "evidence": [
-        "file-diff summary: \"Added: 0, Modified: 3, Removed: 0\"",
-        "frontend/src/App.tsx (truncated)"
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "requirement": "Update Import Lists UI copy to briefly mention availability of sample template downloads and keep existing CSV/XLSX instructions accurate.",
-      "reason": "App.tsx is truncated and the shown portion contains no verifiable UI copy about template downloads or updated instructions; no other UI files in the diff provide this copy.",
-      "evidence": [
-        "frontend/src/App.tsx (truncated)"
+        "frontend/src/components/SettingsCard.tsx"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Global visual theme / palette overhaul (OKLCH color system, purple-tinted palette, typography and shadow token changes).",
-      "reason": "The build request is focused on adding downloadable import templates and small Import Lists copy updates; it does not request broad styling/theme changes.",
+      "description": "Added helper/description text under the helpline input: \"This number will be shown as a tappable click-to-call helpline button in the header.\"",
+      "reason": "The BuildRequest only asked to remove four specific existing elements and explicitly required that no other UI elements outside those XPaths be changed; adding new text is an additional UI change.",
       "evidence": [
-        "frontend/src/index.css",
-        "frontend/tailwind.config.js",
-        "frontend-file-summaries.txt (descriptions for index.css and tailwind.config.js)"
+        "frontend/src/components/SettingsCard.tsx"
+      ]
+    },
+    {
+      "description": "Added a conditional \"Save Changes\" button that appears when local settings differ from stored settings.",
+      "reason": "Not requested; the BuildRequest scope was limited to removing four specified elements and making no other UI changes.",
+      "evidence": [
+        "frontend/src/components/SettingsCard.tsx"
       ]
     }
   ],
-  "confidence": 0.66,
+  "confidence": 0.62,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/src/App.tsx",
+    "frontend/src/components/SettingsCard.tsx",
     "project_state.json"
   ]
 }

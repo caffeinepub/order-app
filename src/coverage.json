@@ -1,39 +1,24 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-11T13:24:40.298Z",
+  "generatedAt": "2026-02-12T04:39:56.362Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
-    "implemented": 2,
+    "total": 1,
+    "implemented": 1,
     "items": [
       {
-        "id": "REQ-10",
-        "summary": "Add downloadable sample/template files for the Import Lists feature so users can easily download a file, fill it in, and upload it back into the app.",
+        "id": "REQ-1",
+        "summary": "Remove the selected Settings UI elements identified by the provided XPaths (apply changes ONLY to these elements):\n1) Remove the element at /html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[1]/div[1] (Settings card header/title area).\n2) Remove the element at /html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[2]/div[1]/input[1] (the first Settings input).\n3) Remove the element at /html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[2]/div[1]/label[1] (the first Settings label).\n4) Remove the element at /html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[2]/div[2]/label[1] (the second Settings label).\n\nUser-facing text should remain in English.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/public/assets/templates/import-lists-sample.csv",
-          "frontend/public/assets/templates/import-lists-template.xlsx",
-          "frontend/src/App.tsx"
+          "frontend/src/components/SettingsCard.tsx"
         ],
         "matchedFiles": [
-          "frontend/public/assets/templates/import-lists-sample.csv",
-          "frontend/public/assets/templates/import-lists-template.xlsx",
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-11",
-        "summary": "Update the Import Lists UI copy to clearly explain (in short form) that users can download a sample template and that the template matches the supported CSV/XLSX formats already described in the Import Lists card.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/App.tsx"
+          "frontend/src/components/SettingsCard.tsx"
         ]
       }
     ]
@@ -43,9 +28,7 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/public/assets/templates/import-lists-sample.csv",
-    "frontend/public/assets/templates/import-lists-template.xlsx",
-    "frontend/src/App.tsx",
+    "frontend/src/components/SettingsCard.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

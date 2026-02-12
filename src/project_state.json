@@ -1,137 +1,22 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 7,
-  "summary": "Build a simple \"Order App\" that lets the user enter a party name and item quantities/sizes, then share the formatted order directly via WhatsApp.",
-  "architectural_notes": [
-    "Provide WhatsApp sharing via a text message deep link (wa.me / whatsapp://send) using the generated order text.",
-    "Support importing master data (party list and item list) from an Excel/CSV file to populate Party Name and Item Name pickers/autocomplete."
-  ],
+  "projectStateVersion": 3,
+  "summary": "New project",
+  "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-create-a-single-page-order-app-ui-that-lets-the-user-enter-an-order-with-a-a-required-party-name-field-and-b-order-line-items-containing-quantity-size-e-g-20-l-4-l-1-l-and-item-name",
-      "title": "Create a single-page \"Order App\" UI that lets the user enter an order with (a) a required Party Name field and (b) order line items containing Quantity, Size (e.g., 20 L, 4 L, 1 L), and Item Name.",
+      "id": "feature-remove-the-selected-settings-ui-elements-identified-by-the-provided-xpaths-apply-changes-only-to-these-elements-1-remove-the-element-at-html-1-body-1-div-1-div-1-main-1-div-1-div-3-div-1-div-1-settings-card-header-title-area-2-remove-the-element-at-html-1-body-1-div-1-div-1-main-1-div-1-div-3-div-2-div-1-input-1-the-first-settings-input-3-remove-the-element-at-html-1-body-1-div-1-div-1-main-1-div-1-div-3-div-2-div-1-label-1-the-first-settings-label-4-remove-the-element-at-html-1-body-1-div-1-div-1-main-1-div-1-div-3-div-2-div-2-label-1-the-second-settings-label-user-facing-text-should-remain-in-english",
+      "title": "Remove the selected Settings UI elements identified by the provided XPaths (apply changes ONLY to these elements):\n1) Remove the element at /html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[1]/div[1] (Settings card header/title area).\n2) Remove the element at /html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[2]/div[1]/input[1] (the first Settings input).\n3) Remove the element at /html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[2]/div[1]/label[1] (the first Settings label).\n4) Remove the element at /html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[2]/div[2]/label[1] (the second Settings label).\n\nUser-facing text should remain in English.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
-    },
-    {
-      "id": "feature-generate-a-formatted-plain-text-order-message-from-the-form-data-that-matches-the-user-s-intended-layout-party-name-followed-by-each-line-as-qty-x-size-item-name",
-      "title": "Generate a formatted plain-text order message from the form data that matches the user’s intended layout (Party Name followed by each line as \"{qty} x {size} {item name}\").",
-      "reqIds": [
-        "REQ-2"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-a-send-on-whatsapp-action-that-opens-whatsapp-with-the-generated-order-message-pre-filled-so-the-user-can-send-it",
-      "title": "Add a \"Send on WhatsApp\" action that opens WhatsApp with the generated order message pre-filled so the user can send it.",
-      "reqIds": [
-        "REQ-3"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-apply-a-coherent-consistent-visual-theme-for-the-app-ui-colors-typography-spacing-suitable-for-quick-order-entry-clean-invoice-like-layout-and-keep-all-user-facing-text-in-english",
-      "title": "Apply a coherent, consistent visual theme for the app UI (colors, typography, spacing) suitable for quick order entry (clean, invoice-like layout), and keep all user-facing text in English.",
-      "reqIds": [
-        "REQ-4"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-a-ui-flow-to-import-party-names-and-item-names-from-a-user-provided-spreadsheet-file-supporting-at-least-csv-and-xlsx-uploads-and-parse-the-file-entirely-on-the-client-no-backend-upload",
-      "title": "Add a UI flow to import Party Names and Item Names from a user-provided spreadsheet file, supporting at least .csv and .xlsx uploads, and parse the file entirely on the client (no backend upload).",
-      "reqIds": [
-        "REQ-5"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-define-and-document-the-expected-spreadsheet-structure-for-imported-lists-and-implement-robust-parsing-rules-to-extract-party-names-and-item-names",
-      "title": "Define and document the expected spreadsheet structure for imported lists and implement robust parsing rules to extract Party Names and Item Names.",
-      "reqIds": [
-        "REQ-6"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-persist-the-imported-party-names-and-item-names-locally-in-the-browser-so-they-are-available-on-next-app-load-and-provide-a-way-to-clear-reset-the-saved-lists",
-      "title": "Persist the imported Party Names and Item Names locally in the browser so they are available on next app load, and provide a way to clear/reset the saved lists.",
-      "reqIds": [
-        "REQ-7"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-the-party-name-input-to-allow-selecting-from-the-imported-party-names-list-while-still-allowing-manual-entry-of-a-new-party-name",
-      "title": "Update the Party Name input to allow selecting from the imported Party Names list while still allowing manual entry of a new party name.",
-      "reqIds": [
-        "REQ-8"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-each-line-item-s-item-name-input-to-allow-selecting-from-the-imported-item-names-list-while-still-allowing-manual-entry-of-a-new-item-name",
-      "title": "Update each Line Item's Item Name input to allow selecting from the imported Item Names list while still allowing manual entry of a new item name.",
-      "reqIds": [
-        "REQ-9"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-downloadable-sample-template-files-for-the-import-lists-feature-so-users-can-easily-download-a-file-fill-it-in-and-upload-it-back-into-the-app",
-      "title": "Add downloadable sample/template files for the Import Lists feature so users can easily download a file, fill it in, and upload it back into the app.",
-      "reqIds": [
-        "REQ-10"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-the-import-lists-ui-copy-to-clearly-explain-in-short-form-that-users-can-download-a-sample-template-and-that-the-template-matches-the-supported-csv-xlsx-formats-already-described-in-the-import-lists-card",
-      "title": "Update the Import Lists UI copy to clearly explain (in short form) that users can download a sample template and that the template matches the supported CSV/XLSX formats already described in the Import Lists card.",
-      "reqIds": [
-        "REQ-11"
-      ],
-      "version": 1
     }
   ],
-  "new_feature_requests": [
-    {
-      "id": "AR-1",
-      "summary": "Create an order entry form with Party Name field and line items (e.g., 20L, 4L, 1L) with quantities and item names",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-2",
-      "summary": "Generate a formatted order message from the form data",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-3",
-      "summary": "Add \"Send on WhatsApp\" sharing to send the generated order message directly via WhatsApp",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-4",
-      "summary": "Add Party Name and Item Name selectable lists populated by importing from an Excel file (e.g., upload/import from .xlsx/.csv)",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-5",
-      "summary": "Provide a downloadable sample/template spreadsheet file (CSV/XLSX) that users can use for the import feature",
-      "reqIds": [],
-      "status": "pending"
-    }
-  ],
-  "gameProjectType": "none",
-  "projectName": "Order App",
+  "new_feature_requests": [],
+  "projectName": "Remove selected Settings UI elements",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

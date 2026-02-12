@@ -1,48 +1,23 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Downloadable CSV/XLSX templates for Import Lists",
+  "title": "Remove selected Settings UI elements",
   "requirements": [
     {
-      "id": "REQ-10",
-      "summary": "Provide downloadable sample CSV and Excel templates for the Import Lists feature via static frontend assets and visible download controls in the Import Lists card.",
+      "id": "REQ-1",
+      "summary": "Remove only the four specified Settings UI elements (header/title area and specific labels/inputs) without changing any other UI.",
       "acceptanceCriteria": [
-        "The app includes at least one downloadable sample CSV file placed in the frontend static/public assets and accessible via a visible control in the Import Lists card.",
-        "The app includes a downloadable sample Excel template (.xlsx) that matches the current XLSX import expectations (sheets named \"Parties\" and/or \"Items\"; first row treated as header; values listed starting from the second row).",
-        "The sample CSV template matches the current CSV import expectations by including a header row with columns that the parser recognizes (e.g., \"partyName\" and \"itemName\") and at least a few example rows.",
-        "Clicking the download control(s) downloads the template file(s) without requiring any backend calls.",
-        "All user-facing text added for this feature is in English."
+        "The element at XPath /html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[1]/div[1] is no longer rendered.",
+        "The element at XPath /html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[2]/div[1]/input[1] is no longer rendered.",
+        "The element at XPath /html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[2]/div[1]/label[1] is no longer rendered.",
+        "The element at XPath /html[1]/body[1]/div[1]/div[1]/main[1]/div[1]/div[3]/div[2]/div[2]/label[1] is no longer rendered.",
+        "No other UI elements outside the four selected XPaths are changed."
       ],
       "file_operations": [
         {
-          "path": "frontend/public/assets/templates/import-lists-sample.csv",
-          "operation": "create",
-          "description": "Add a sample CSV template as a static asset. Ensure it includes a header row with recognized columns (at minimum: partyName,itemName) plus a few example rows so it imports cleanly with the existing CSV parser in frontend/src/lib/importLists/parseImportedLists.ts."
-        },
-        {
-          "path": "frontend/public/assets/templates/import-lists-template.xlsx",
-          "operation": "create",
-          "description": "Add a sample Excel (.xlsx) template as a static asset that matches current XLSX import expectations: include sheets named \"Parties\" and \"Items\" (case-insensitive supported by parser), first row as header, and values starting on the second row (e.g., first column contains names)."
-        },
-        {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/components/SettingsCard.tsx",
           "operation": "modify",
-          "description": "In the Import Lists card, add visible download controls (e.g., two links/buttons) that directly download the static template files at frontend/public/assets/templates/import-lists-sample.csv and frontend/public/assets/templates/import-lists-template.xlsx using only browser download behavior (no backend calls)."
-        }
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "summary": "Update the Import Lists UI copy to mention the downloadable templates and reinforce the supported CSV/XLSX formats already described.",
-      "acceptanceCriteria": [
-        "The Import Lists card includes a brief line of text and/or helper text that references the availability of the sample template download(s).",
-        "The existing import instructions remain accurate (CSV columns like \"partyName\"/\"itemName\"; Excel sheets \"Parties\" and \"Items\")."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Update the Import Lists card description/helper text to briefly mention that users can download sample templates (CSV and Excel) and that they match the supported formats (CSV columns partyName/itemName; Excel sheets Parties/Items). Keep all new UI text in English."
+          "description": "Update the SettingsCard JSX to stop rendering exactly the four selected elements: (1) remove the Settings card header/title area element (the selected header/title wrapper at the provided XPath) while leaving other Settings card content untouched, (2) remove the first settings input (App Name input), (3) remove the first settings label (App Name label), and (4) remove the second settings label (Helpline Phone label). Do not change any other Settings UI structure/text beyond what is strictly necessary for these removals; keep user-facing text in English."
         }
       ]
     }
